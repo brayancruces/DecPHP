@@ -1,0 +1,294 @@
+<?php
+/**
+*	Decena Php Framework.
+*
+*	@author		Edgard Decena - edecena@gmail.com
+* 	@link		http://www.gnusistemas.com
+* 	@version	1.0.0
+* 	@package	DecPHP
+*	@license 	http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+
+$comandos = array(
+	'-i'  => 'Muestra información sobre DecPHP. USO: php DecPHP -i',
+	'-ns' => 'Crea un nuevo proyecto simple en DecPHP. USO: php DecPHP -ns <NombreProyecto>',
+	'-nc' => 'Crea un nuevo proyecto completo en DecPHP. USO: php DecPHP -nc <NombreProyecto>',
+	'-pv' => 'Crea una nueva vista en un proyecto. USO: php DecPHP -pv <NombreProyecto> <NombreVista>',
+	'-h'  => 'Muestra la ayuda y opciones del comando php DecPHP. USO: php DecPHP -h'
+);
+
+
+$requisitos['PHP Version'] = '5.4.34';
+
+
+if (!isset($argv[1]) or empty($argv[1]) or !array_key_exists($argv[1], $comandos))
+{
+	$opcion = '-h';
+}
+else
+{
+	$opcion = $argv[1];	
+}
+
+switch ($opcion)
+{
+	case '-h':
+		ayuda($comandos);
+		break;
+
+	case '-i':
+		info();
+		break;
+
+	case '-ns':
+
+		if (!isset($argv[2]) or empty($argv[2]))
+		{
+			echo "\n";
+			echo 'ERROR: Debe proveer un nombre de proyecto válido.'."\n\n";
+			echo 'No pudo crearse un nuevo proyecto en DecPHP Framework.'."\n\n";
+			exit;
+		}
+		else
+		{
+			nuevoProyectoSimple($argv[2]);
+		}
+
+		break;
+
+	case '-nc':
+
+		if (!isset($argv[2]) or empty($argv[2]))
+		{
+			echo "\n";
+			echo 'ERROR: Debe proveer un nombre de proyecto válido.'."\n\n";
+			echo 'No pudo crearse un nuevo proyecto en DecPHP Framework.'."\n\n";
+			exit;
+		}
+		else
+		{
+			nuevoProyectoCompleto($argv[2]);
+		}
+
+		break;
+
+	case '-pv':
+
+		if (!isset($argv[2]) or empty($argv[2]) or !is_dir('..'.DIRECTORY_SEPARATOR.$argv[2]))
+		{
+			echo "\n";
+			echo 'ERROR: Debe proveer un nombre de proyecto válido.'."\n\n";
+			echo 'No pudo crearse una nueva vista en DecPHP Framework.'."\n\n";
+			exit;
+		}
+
+		if (!isset($argv[3]) or empty($argv[3]))
+		{
+			echo "\n";
+			echo 'ERROR: Debe proveer un nombre de tabla válido.'."\n\n";
+			echo 'No pudo crearse una nueva vista en DecPHP Framework.'."\n\n";
+			exit;
+		}
+		
+		nuevaVistaProyecto($argv[2], $argv[3]);
+
+		break;
+}
+
+//-----------------------------  FUNCIÓN -h  ---------------------------------------
+function ayuda($comandos)
+{
+	echo "\n";
+	echo '+--------------------------------------------------------------------------------+'."\n";
+	echo '|                            DecPHP Framework ~ DecPHP                           |'."\n";
+	echo '+--------------------------------------------------------------------------------+'."\n";
+	echo "\n";
+	echo 'Opciones disponibles para el comando: php DecPHP:'."\n\n";
+	foreach ($comandos as $cmd => $desc)
+	{
+		echo '   '.$cmd.': '.$desc."\n\n";
+	}
+	echo '+--------------------------------------------------------------------------------+'."\n";
+	echo "\n";
+}
+
+
+//-----------------------------  FUNCIÓN -info  ---------------------------------------
+function info()
+{
+	echo "\n";
+	echo '+---------------------------------------------------+'."\n";
+	echo '|              DecPHP Framework ~ DecPHP            |'."\n";
+	echo '+----------------------------------=----------------+'."\n";
+	echo '|                                                   |'."\n";
+	echo '|        Versión: 1.0.0.                            |'."\n";
+	echo '|        Fecha: Octubre de '.date('Y').'.                    |'."\n";
+	echo '|        Desarrollador: Ing. Edgard Decena.         |'."\n";
+	echo '|        Email: edecena@gmail.com.                  |'."\n";
+	echo '|        Web: http://www.GNUSistemas.com.           |'."\n";
+	echo '|                                                   |'."\n";
+	echo '+---------------------------------------------------+'."\n";
+	echo "\n";
+}
+
+
+//-----------------------------  FUNCIÓN -ns  ---------------------------------------
+
+function nuevoProyectoSimple($nomProyecto)
+{
+	echo "\n";
+	echo '+--------------------------------------------------------------------------------------+'."\n";
+	echo '|           Creando un nuevo proyecto simple en DecPHP Framework                       |'."\n";
+	echo '+--------------------------------------------------------------------------------------+'."\n";
+	echo "\n";
+
+	global $requisitos;
+
+	$DS               = DIRECTORY_SEPARATOR;	
+	$ROOT             = realpath(dirname(__FILE__)).$DS;
+	$PATH_NEW_PROYECT = $ROOT.'..'.$DS.$nomProyecto;
+	
+	if (!is_dir($PATH_NEW_PROYECT))
+	{
+		mkdir($PATH_NEW_PROYECT);
+		$zip = new ZipArchive;
+		$zip->open($ROOT.'files'.$DS.'ns.zip');
+		$zip->extractTo($PATH_NEW_PROYECT);
+		$zip->close();
+
+		// Se VALIDAN los REQUISITOS para el funcionamiento de DecPHP.
+		ob_start();
+
+			phpinfo();
+
+		$phpinfo = ob_get_clean();
+
+		// FALTA POR VALIDAR.
+		
+		echo "\n";
+		echo '+----------------------------------------------------------------------------------+'."\n";
+		echo '|        Se ha creado con éxito un nuevo proyecto simple en DecPHP Framework!      |'."\n";
+		echo '+----------------------------------------------------------------------------------+'."\n";
+		echo "\n";
+	}
+	else
+	{
+		echo 'ERROR: El proyecto/directorio "'.$nomProyecto.'" ya existe.'."\n\n";
+		exit;
+	}
+}
+
+//-----------------------------  FUNCIÓN -nc  ---------------------------------------
+
+function nuevoProyectoCompleto($nomProyecto)
+{
+	echo "\n";
+	echo '+--------------------------------------------------------------------------------------+'."\n";
+	echo '|           Creando un nuevo proyecto completo en DecPHP Framework                     |'."\n";
+	echo '+--------------------------------------------------------------------------------------+'."\n";
+	echo "\n";
+
+	global $requisitos;
+
+	$DS               = DIRECTORY_SEPARATOR;	
+	$ROOT             = realpath(dirname(__FILE__)).$DS;
+	$PATH_NEW_PROYECT = $ROOT.'..'.$DS.$nomProyecto;
+	
+	if (!is_dir($PATH_NEW_PROYECT))
+	{
+		mkdir($PATH_NEW_PROYECT);
+		$zip = new ZipArchive;
+		$zip->open($ROOT.'files'.$DS.'nc.zip');
+		$zip->extractTo($PATH_NEW_PROYECT);
+		$zip->close();
+
+		// Se crea la LLAVE HASH_KEY para el nuevo proyecto.
+		$config = file_get_contents($PATH_NEW_PROYECT.$DS.'config'.$DS.'config.php');
+		$search = "App::setConfig('hash_key',			'****');";
+		$replace = "App::setConfig('hash_key',			'".uniqid('', TRUE)."');";
+		$config = str_replace($search, $replace, $config);
+
+		if (file_put_contents($PATH_NEW_PROYECT.$DS.'config'.$DS.'config.php', $config))
+		{
+			echo 'Se creó una llave de seguridad hash_key en el config.php...'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo crearse una llave de seguridad hash_key en el config.php!'."\n";
+		}
+
+		// Se dan PERMISOS DE ESCRITURA para las carpetas cache y data.
+		if (chmod($PATH_NEW_PROYECT.$DS.'cache', 0777))
+		{
+			echo 'Se otorgaron todos los permisos de acceso al directorio cache....'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo darse todos los permisos de acceso al directorio cache!'."\n";
+		}
+
+		if (chmod($PATH_NEW_PROYECT.$DS.'data', 0777))
+		{
+			echo 'Se otorgaron todos los permisos de acceso al directorio data...'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo darse todos los permisos de acceso al directorio data!'."\n";
+		}
+
+		if (chmod($PATH_NEW_PROYECT.$DS.'data'.$DS.'log', 0777))
+		{
+			echo 'Se otorgaron todos los permisos de acceso al directorio data'.$DS.'log...'."\n";
+		}
+		else
+		{
+			echo 'ALERTA: NO pudo darse todos los permisos de acceso al directorio data'.$DS.'log '."\n";
+		}
+
+		// Se VALIDAN los REQUISITOS para el funcionamiento de DecPHP.
+		ob_start();
+
+			phpinfo();
+
+		$phpinfo = ob_get_clean();
+
+		// FALTA POR VALIDAR.
+		
+		echo "\n";
+		echo '+----------------------------------------------------------------------------------+'."\n";
+		echo '|      Se ha creado con éxito un nuevo proyecto completo en DecPHP Framework!      |'."\n";
+		echo '+----------------------------------------------------------------------------------+'."\n";
+		echo "\n";
+	}
+	else
+	{
+		echo 'ERROR: El proyecto/directorio "'.$nomProyecto.'" ya existe.'."\n\n";
+		exit;
+	}
+		
+}
+
+//-----------------------------  FUNCIÓN -pv  ---------------------------------------
+
+function nuevaVistaProyecto($proyecto, $tabla)
+{
+	$DS = DIRECTORY_SEPARATOR;
+
+	$config = realpath('.'.$DS.'..'.$DS.$proyecto).$DS.'config'.$DS.'config.php';
+	
+	if (is_readable($config))
+	{
+		// $config = file_get_contents($config);
+		require_once 'App.php';
+		require_once $config;
+
+		echo print_r(App::sql('select * from banco;'));
+	
+	}
+	else
+	{
+		exit('No existe o no es legible el archivo '.$config."\n");
+	}
+
+	echo "$proyecto $tabla\n";
+}

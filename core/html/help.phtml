@@ -1,0 +1,474 @@
+<!--
+/**
+*	Decena Php Framework.
+*
+*	@author		Edgard Decena - edecena@gmail.com
+* 	@link		http://www.gnusistemas.com
+* 	@version	1.0.0
+* 	@package	DecPHP
+*	@license 	http://opensource.org/licenses/gpl-license.php GNU Public License
+*/
+-->
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>DecPHP Framework</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			<?php require_once 'styles.css' ?>
+		</style>
+		<style type="text/css">
+			<?php require_once 'idea.css' ?>
+		</style>
+		<script type="text/javascript">
+			<?php
+				$js = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'highlight.pack.js');
+				echo $js; 
+			?>
+		</script>
+		<script>hljs.initHighlightingOnLoad();</script>
+	</head>
+
+	<body>
+		<a name="inicio"></a>
+		<h1>DecPHP Framework</h1>
+		<hr/>
+<pre>
+	<code class="php">
+		public function hola()
+		{
+			echo "Hola mundo!";
+			$saludo = "kakita";
+		}
+	</code>
+</pre>
+<!-- ÍNDICE  DE  CONTENIDO  -->
+<table>
+	<caption>Índice de Contenido</caption>
+	<tbody>
+		<tr>
+			<td>
+				<ul>
+					<li><a href="#basicas">Constantes y Funciones Básicas</a></li>
+					<li><a href="#generales">Configuraciones Generales</a></li>
+					<li><a href="#directorios">Configuración de Directorios</a></li>
+					<li><a href="#seguridad">Configuraciones de Seguridad</a></li>
+					<li><a href="#basedatos">Configuraciones para el Acceso a Bases de Datos</a></li>
+					<li><a href="#acceso_basedatos">Acceso a Bases de Datos: <span class="cmd">App::sql()</span></a></li>
+					<li><a href="#ruteo">Ruteo: <span class="cmd">App::get()</span>, <span class="cmd">App::post()</span>, <span class="cmd">App::defaultRoute()</span>, <span class="cmd">App::callControler()</span> y <span class="cmd">App::redirect()</span></a></li>
+					<li><a href="#vistas">Vistas, Templates y Widgets: <span class="cmd">App::render()</span>, <span class="cmd">App::setWidget()</span> y <span class="cmd">App::widget()</span></a></li>
+					<li><a href="#modelos">Modelos de Datos y Librerías: <span class="cmd">App::loadModel()</span> y <span class="cmd">App::loadLib()<span></a></li>
+					<li><a href="#cache">Gestión de Cache: <span class="cmd">App::putCache()</span> y <span class="cmd">App::getCache()</span></a></li>
+					<li><a href="#cookies">Gestión de Cookies: <span class="cmd">App::setCookie()</span>, <span class="cmd">App::getCookie()</span> y <span class="cmd">App::delCookie()</span></a></li>
+					<li><a href="#seguridad2">Seguridad: <span class="cmd">App::hash()<span>, <span class="cmd">App::encrypt()</span> y <span class="cmd">App::decrypt()</span></a></li>
+					<li><a href="#acceso">Control de acceso: <span class="cmd">App::allow()</span> y <span class="cmd">App::allowStrict()</span></a></li>
+					<li><a href="#archivos">Subida y Manejo de Archivos: <span class="cmd">App::upload()</span>, <span class="cmd">App::fileMove()</span> y <span class="cmd">App::fileDelete()</span></a></li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- CONSTANTES  Y  FUNCIONES  BÁSICAS  -->
+		<br/>
+		<br/>
+		<a name="basicas"></a>
+		<table>
+			<caption>Constantes y Funciones Básicas.</caption>
+			<thead>
+				<tr>
+					<th>Directiva</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cmd">App::DS</td>
+					<td>Devuelve el separador de directorios del servidor.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::base_dir()</td>
+					<td>Función que devuelve el directorio del script que invoca App.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::base_url()</td>
+					<td>Función que devuelve la url base de la aplicación.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::url($url = null)</td>
+					<td>Función que devuelve una url válida para la aplicación.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::dir($path = null)</td>
+					<td>Función que devuelve un directorio válido en el servidor. El parámetro $path admite la nomenclatura "direcorio.subdirectorio.subdirectorio"</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig($clave = null, $valor = null)</td>
+					<td>Establece un parámetro de configuración de App.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::config($clave = null)</td>
+					<td>Función que devuelve un parámetro de configuración dado por $clave. En caso de que $clave sea null devuelve un arreglo con todos los parámetros.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+<!-- CONFIGURACIONES  GENERALES  DE  APP  -->
+		
+		<br/>
+		<br/>
+		<a name="generales"></a>
+		<table>
+			<caption>Configuraciones Generales</caption>
+			<thead>
+				<tr>
+					<th>Directiva</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cmd">App::setConfig('debug_mode', TRUE);</td>
+					<td>Establece el modo de ejecución de App. Si la directiva es FALSE silencia todos los errores de App.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('session_time', minutos);</td>
+					<td>Establece el tiempo de sessión en minutos. Cero equivale a tiempo de sesión indefinido.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('access_levels', array $levelsAccess)</td>
+					<td>Establece los niveles de acceso para cada tipo de usuario dado por el arreglo $levelsAccess.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('set_locale', localizacion_regional)</td>
+					<td>Establece la localización regional a ser utilizada.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('time_zone', zona_horaria)</td>
+					<td>Establece la zona horaria a ser utilizada.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setClassAutoload($path = null);</td>
+					<td>Establece la ruta para la autocarga de clases.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+<!-- CONFIGURACIÓN  DE  DIRECTORIOS  EN  APP  -->
+		
+		<br/>
+		<br/>
+		<a name="directorios"></a>
+		<table>
+			<caption>Configuración de Directorios</caption>
+			
+			<thead>
+				<tr>
+					<th>Directiva</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cmd">App::setConfig('controllers_folder', 'directorio');</td>
+					<td>Establece el directorio de los controladores.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('views_folder', 'directorio');</td>
+					<td>Establece el directorio de las vistas.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('templates_folder', 'directorio');</td>
+					<td>Establece el directorio de los templates.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('template', 'template_file');</td>
+					<td>Establece el template a mostrar en las vistas.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::config('widgets_folder', 'directorio');</td>
+					<td>Establece el directorio donde se guardarán los widgets.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('models_folder', 'directorio');</td>
+					<td>Establece el directorio de los modelos.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('libs_folder', 'directorio');</td>
+					<td>Establece el directorio de las librerías.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('cache_folder', 'directorio')</td>
+					<td>Establece el directorio de la cache que debe tener permisos de escritura.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('data_folder', 'directorio')</td>
+					<td>Establece el directorio de datos que debe tener permisos de escritura.</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('classes_folder', 'directorio');</td>
+					<td>Establece el directorio de las clases.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+<!-- CONFIGURACIONES  DE  SEGURIDAD  DE  APP  -->
+		
+		<br/>
+		<br/>
+		<a name="seguridad"></a>
+		<table>
+			<caption>Configuraciones de Seguridad</caption>
+			<thead>
+				<tr>
+					<th>Directiva</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cmd">App::setConfig('hash_key', 'clave');</td>
+					<td>Establece una clave hash. Puede generarse desde Php con uniqid().</td>
+				</tr>
+				<tr>
+					<td class="cmd">App::setConfig('hash_algorithm', 'algoritmo');</td>
+					<td>Establece el algoritmo de hashing.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!-- CONFIGURACIONES  PARA  EL ACCESSO  A  BASE  DE  DATOS  -->
+		
+		<br/>
+		<br/>
+		<a name="basedatos"></a>
+		<table>
+			<caption>Configuraciones para el Acceso a Bases de Datos</caption>
+			<thead>
+				<tr>
+					<th>Directiva</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+			<tbody>				
+				<tr>
+					<td class="cmd">App::setConfig('db_driver', 'driver_pdo');</td>
+					<td>Establece el driver de conexión PDO a la base de datos.</td>
+				</tr>
+
+				<tr>
+					<td class="cmd">App::setConfig('db_host', 'host');</td>
+					<td>Establece el host de la conexión.</td>
+				</tr>
+
+				<tr>
+					<td class="cmd">App::setConfig('db_port', 'port');</td>
+					<td>Establece el puerto de la conexión.</td>
+				</tr>
+
+				<tr>
+					<td class="cmd">App::setConfig('db_dbname', 'database');</td>
+					<td>Establece el nombre de la base de datos.</td>
+				</tr>
+
+				<tr>
+					<td class="cmd">App::setConfig('db_user', 'user');</td>
+					<td>Establece el usuario de conexión a la base de datos.</td>
+				</tr>
+
+				<tr>
+					<td class="cmd">App::setConfig('db_pass', 'password');</td>
+					<td>Establece el password del usuario de conexión.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+<!-- ACCESO  A  BASE  DE  DATOS  -->
+		
+		<br/>
+		<br/>
+		<a name="acceso_basedatos"></a>
+		<table>
+			<caption>Acceso a Base de Datos</caption>
+			<thead>
+				<tr>
+					<th>Directiva</th>
+					<th>Descripción</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cmd">App::sql(string $sql, array $params = array());</td>
+					<td>Recibe una sentencia SQL en el parámetro $sql y devuelve un conjunto de datos en caso de una sentencia SELECT o NULL en cualquier otro caso.</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--RUTEO  -->
+		
+		<br/>
+		<br/>
+		<a name="ruteo"></a>
+		<table>
+			<caption>Ruteo</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--VISTAS  -->
+		
+		<br/>
+		<br/>
+		<a name="vistas"></a>
+		<table>
+			<caption>Vistas, Templates y Widgets</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+<!--MODELOS  -->
+		
+		<br/>
+		<br/>
+		<a name="modelos"></a>
+		<table>
+			<caption>Modelos de Datos y Librerías</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--CACHE  -->
+		
+		<br/>
+		<br/>
+		<a name="cache"></a>
+		<table>
+			<caption>Gestión de Cache</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--COOKIE  -->
+		
+		<br/>
+		<br/>
+		<a name="cookies"></a>
+		<table>
+			<caption>Gestión de Cookies</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--SEGURIDAD2  -->
+		
+		<br/>
+		<br/>
+		<a name="seguridad2"></a>
+		<table>
+			<caption>Seguridad</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--ACCESSO  -->
+		
+		<br/>
+		<br/>
+		<a name="acceso"></a>
+		<table>
+			<caption>Control de Acceso</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+<!--ARCHIVOS  -->
+		
+		<br/>
+		<br/>
+		<a name="archivos"></a>
+		<table>
+			<caption>Subida y Manejo de Archivos</caption>
+			<tbody>
+				<tr>
+					<td>data</td>
+				</tr>
+				<tr>
+					<td class="volver_arriba"><a href="#inicio">Volver Arriba</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+	<br/>
+	<hr/>
+
+	<footer><b><spam style="color:#1D1387;">DecPHP Framework</spam></b> es desarrollado por <a href="mailto:edecena@gmail.com">Edgard Decena</a>. <a href="http://www.gnusistemas.com/" target="_blank">GNU Sistemas</a> <?php echo date('Y') ?>. <a href="http://opensource.org/licenses/gpl-license.php" target="_blank"> Licencia GPL</a>.</footer>
+
+	</body>
+
+</html>

@@ -1,0 +1,9 @@
+# Proteger .htaccess
+<Files .htaccess>
+	order allow,deny
+	deny from all
+</Files>
+
+deny from all
+
+ErrorDocument 403 '<h1 style="color:#1D1387;">DecPHP Framework</h1><p style="color:#C40101; font-size:24px; font-weight:bold;">Acceso Denegado!</p>'

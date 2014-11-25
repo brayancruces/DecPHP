@@ -1,0 +1,60 @@
+body{
+	margin: 20px 20px 20px 20px;
+}
+
+h1{
+	color:#1D1387;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.cmd{
+	color: #266C14;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: left;
+}
+
+.volver_arriba{
+	text-align:center;
+}
+
+table{
+	width: 100%;
+}
+
+table, tr, td, th{
+	border: 1px solid #BCB1B1;
+	padding: 7px 7px 7px 7px;
+	border-collapse: collapse;
+	text-align: justify;
+	font-family: verdana;
+	font-size: 17px;
+}
+
+th {
+	color: #2E0764;
+}
+
+table caption {
+	color: #2E0764;
+	margin-bottom: 10px;
+	font-size: 18px;
+}
+li {
+	font-size: 17px;
+	font-family: verdana;
+	margin-bottom: 10px;
+}
+
+footer{
+	font-family: verdana;
+	text-align:center;
+	font-size:14px;
+}
